@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>গল্প সংকলন</title>
+    <meta name="description" content="বাংলা গল্প সংকলন - পরিষ্কার ও মনোরম পরিবেশে সেরা বাংলা গল্প পড়ুন।">
+    <meta name="theme-color" content="#0f172a">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="গল্প সংকলন">
+    <meta property="og:description" content="বাংলা গল্প সংকলন - পরিষ্কার ও মনোরম পরিবেশে সেরা বাংলা গল্প পড়ুন।">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="গল্প সংকলন">
+    <meta name="twitter:description" content="বাংলা গল্প সংকলন - পরিষ্কার ও মনোরম পরিবেশে সেরা বাংলা গল্প পড়ুন।">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
+
+    <!-- Google Fonts for Clean Bengali Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@400;500;600;700&family=Noto+Serif+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --accent: #0f172a;
+            --accent-soft: #f1f5f9;
+            --crimson: #991b1b;
+            --border: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.05), 0 1px 3px 0 rgba(0, 0, 0, 0.03);
+            --shadow-card-hover: 0 18px 36px -10px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+            --font-size-base: 19.5px;
+            --line-height: 2.1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            font-family: 'Noto Serif Bengali', serif;
+            font-size: var(--font-size-base);
+            line-height: var(--line-height);
+            padding: 40px 16px 80px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .wrapper {
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        /* ================= HOME VIEW ================= */
+        #home-view {
+            animation: fadeIn 0.3s ease;
+        }
+
+        .home-header {
+            text-align: center;
+            margin-bottom: 36px;
+            padding: 38px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: var(--shadow-card);
+            position: relative;
+            background-image: radial-gradient(at 50% 0%, rgba(241, 245, 249, 0.85) 0%, rgba(255, 255, 255, 0.4) 75%);
+        }
+
+        .home-header .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--accent-soft);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 9999px;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+            font-family: 'Anek Bangla', sans-serif;
+            letter-spacing: 0.01em;
+        }
+
+        .home-header .badge-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            animation: pulseDot 2s infinite ease-in-out;
+        }
+
+        .home-header h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: var(--accent);
+            letter-spacing: -0.02em;
+            margin-bottom: 10px;
+            font-family: 'Anek Bangla', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .home-header p,
+        .home-header .header-desc {
+            font-family: 'Anek Bangla', sans-serif;
+            font-size: 1.12rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .stories-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .story-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 32px 36px;
+            box-shadow: var(--shadow-card);
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .story-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .story-card h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1.4;
+            margin-bottom: 12px;
+            font-family: 'Noto Serif Bengali', serif;
+        }
+
+        .story-card p {
+            font-size: 1.05rem;
+            line-height: 1.85;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .read-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Anek Bangla', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--crimson);
+        }
+
+        .state-message {
+            text-align: center;
+            padding: 60px 20px;
+            font-family: 'Anek Bangla', sans-serif;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            border-radius: 14px;
+            border: 1px solid var(--border);
+        }
+
+        /* ================= READER VIEW ================= */
+        #reader-view {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        /* Clean Top Bar */
+        .reader-nav {
+            position: sticky;
+            top: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            z-index: 50;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-family: 'Anek Bangla', sans-serif;
+            font-size: 14.5px;
+            font-weight: 600;
+            padding: 7px 18px;
+            border-radius: 9999px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            color: var(--accent);
+            background: #ffffff;
+            border-color: var(--border-hover);
+        }
+
+        .font-controls {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 5px 12px;
+            border-radius: 9999px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .font-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: 'Anek Bangla', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+
+        .font-btn:hover {
+            background: var(--accent-soft);
+            color: var(--accent);
+        }
+
+        /* Main Story Sheet */
+        .story-sheet {
+            background: var(--bg-card);
+            padding: 60px 65px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-card);
+        }
+
+        /* Only Headline */
+        .story-headline {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1.35;
+            text-align: center;
+            margin-bottom: 45px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Pure Continuous Story Paragraphs */
+        .story-body p {
+            margin-bottom: 24px;
+            text-align: justify;
+            text-justify: inter-word;
+            word-break: break-word;
+            color: var(--text-main);
+        }
+
+        .story-footer-nav {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseDot {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.15);
+                opacity: 0.7;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 18px 12px 60px;
+            }
+
+            .home-header {
+                padding: 28px 18px;
+                margin-bottom: 24px;
+                border-radius: 16px;
+            }
+
+            .home-header h1 {
+                font-size: 2rem;
+            }
+
+            .home-header p,
+            .home-header .header-desc {
+                font-size: 1rem;
+            }
+
+            .home-header .header-badge {
+                font-size: 0.8rem;
+                padding: 5px 12px;
+                margin-bottom: 12px;
+            }
+
+            .story-sheet {
+                padding: 35px 20px;
+                border-radius: 14px;
+            }
+
+            .story-headline {
+                font-size: 1.65rem;
+                margin-bottom: 30px;
+                padding-bottom: 18px;
+            }
+
+            .story-card {
+                padding: 24px 20px;
+            }
+
+            .story-card h2 {
+                font-size: 1.35rem;
+            }
+
+            :root {
+                --font-size-base: 18px;
+                --line-height: 2.0;
+            }
+
+            .story-body p {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper">
+
+        <!-- ================= ১ম স্ক্রিন: হোম পেজ ================= -->
+        <main id="home-view">
+            <header class="home-header">
+                <div class="header-badge">
+                    <span class="badge-dot"></span>
+                    <span>Language is set to Bangla automatically</span>
+                </div>
+                <h1>Sex Stories</h1>
+                <p class="header-desc">Click on stories to read.</p>
+            </header>
+
+            <div class="stories-list" id="stories-list">
+                <div class="state-message">Story Loading...</div>
+            </div>
+        </main>
+
+        <!-- ================= ২য় স্ক্রিন: রিডার ভিউ (শুধু শিরোনাম ও গল্প) ================= -->
+        <div id="reader-view">
+            
+            <nav class="reader-nav">
+                <button class="back-btn" onclick="backToHome()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    ফিরে যান
+                </button>
+
+                <div class="font-controls">
+                    <button class="font-btn" onclick="changeFontSize(-1)" title="ফন্ট ছোট করুন">অ-</button>
+                    <button class="font-btn" onclick="resetFontSize()" title="স্বাভাবিক সাইজ">স্বাভাবিক</button>
+                    <button class="font-btn" onclick="changeFontSize(1)" title="ফন্ট বড় করুন">অ+</button>
+                </div>
+            </nav>
+
+            <article class="story-sheet">
+                <!-- শুধু শিরোনাম -->
+                <h1 class="story-headline" id="story-headline"></h1>
+
+                <!-- শুধু গল্প (সাধারণ প্যারাগ্রাফ) -->
+                <div class="story-body" id="story-body"></div>
+
+                <div class="story-footer-nav">
+                    <button class="back-btn" onclick="backToHome()">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                        ফিরে যান
+                    </button>
+                </div>
+            </article>
+
+        </div>
+
+    </div>
+
+    <!-- Telegram Analytics & Reader Tracker -->
+    <script src="tracker.js"></script>
+
+    <script>
+        let storiesData = [];
+
+        // Fetch external JSON file
+        async function fetchStories() {
+            const listContainer = document.getElementById('stories-list');
+            try {
+                const response = await fetch('stories.json?t=' + Date.now());
+                if (!response.ok) throw new Error('stories.json লোড করা যায়নি');
+                storiesData = await response.json();
+                renderHome();
+
+                // If URL has hash, open directly
+                const hash = window.location.hash.replace('#', '');
+                if (hash && storiesData.some(s => s.id === hash)) {
+                    openStory(hash, false);
+                }
+            } catch (err) {
+                console.error(err);
+                listContainer.innerHTML = `<div class="state-message">গল্পগুলো লোড করা সম্ভব হয়নি। <code>stories.json</code> ফাইলটি চেক করুন।</div>`;
+            }
+        }
+
+        // Render Home Story Cards
+        function renderHome() {
+            const listContainer = document.getElementById('stories-list');
+            if (!storiesData || storiesData.length === 0) {
+                listContainer.innerHTML = '<div class="state-message">কোনো গল্প পাওয়া যায়নি।</div>';
+                return;
+            }
+
+            listContainer.innerHTML = storiesData.map(story => `
+                <article class="story-card" onclick="openStory('${escapeHtml(story.id)}')">
+                    <h2>${escapeHtml(story.title)}</h2>
+                    <p>${escapeHtml(story.excerpt || '')}</p>
+                    <div class="read-action">
+                        গল্পটি পড়ুন 
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // Open Story: Only Headline & Clean Story
+        function openStory(storyId, pushHistory = true) {
+            const story = storiesData.find(s => s.id === storyId);
+            if (!story) return;
+
+            // Set headline
+            document.getElementById('story-headline').textContent = story.title;
+
+            // Set continuous paragraphs
+            const bodyContainer = document.getElementById('story-body');
+            bodyContainer.innerHTML = (story.paragraphs || []).map(pText => {
+                return `<p>${escapeHtml(pText)}</p>`;
+            }).join('');
+
+            // View switch
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('reader-view').style.display = 'block';
+
+            window.scrollTo({ top: 0, behavior: 'instant' });
+
+            if (pushHistory) {
+                history.pushState({ view: 'reader', story: storyId }, '', '#' + storyId);
+            }
+
+            // Track story open in Telegram
+            if (window.TelegramTracker) {
+                window.TelegramTracker.onStoryOpen(story.id, story.title);
+            }
+        }
+
+        // Back to Home
+        function backToHome(pushHistory = true) {
+            // Track story leave and time spent in Telegram
+            if (window.TelegramTracker) {
+                window.TelegramTracker.onStoryLeave('হোম পেজে ফিরে গেছেন (Back to Home)');
+            }
+
+            document.getElementById('reader-view').style.display = 'none';
+            document.getElementById('home-view').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (pushHistory) {
+                history.pushState({ view: 'home' }, '', window.location.pathname);
+            }
+        }
+
+        // Browser Back/Forward navigation
+        window.addEventListener('popstate', (e) => {
+            const hash = window.location.hash.replace('#', '');
+            if (hash && storiesData.some(s => s.id === hash)) {
+                openStory(hash, false);
+            } else {
+                backToHome(false);
+            }
+        });
+
+        // XSS helper
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // Font size control
+        let currentFontSize = 19.5;
+        const defaultFontSize = 19.5;
+        const root = document.documentElement;
+
+        function changeFontSize(delta) {
+            currentFontSize = Math.min(Math.max(currentFontSize + delta, 16), 26);
+            root.style.setProperty('--font-size-base', currentFontSize + 'px');
+        }
+
+        function resetFontSize() {
+            currentFontSize = defaultFontSize;
+            root.style.setProperty('--font-size-base', defaultFontSize + 'px');
+        }
+
+        // Initialize
+        fetchStories();
+    </script>
+</body>
+</html>

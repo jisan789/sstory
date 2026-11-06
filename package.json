@@ -1,0 +1,14 @@
+{
+  "name": "story-collection",
+  "version": "1.0.0",
+  "description": "বাংলা গল্প সংকলন - Bengali Story Collection",
+  "private": true,
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "bengali",
+    "story",
+    "reader"
+  ]
+}
