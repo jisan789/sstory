@@ -4,7 +4,8 @@
   "description": "বাংলা গল্প সংকলন - Bengali Story Collection",
   "private": true,
   "scripts": {
-    "start": "npx serve ."
+    "start": "node server.js",
+    "serve": "npx serve ."
   },
   "keywords": [
     "bengali",

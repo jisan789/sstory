@@ -11,6 +11,10 @@ yarn-error.log*
 .env
 .env*.local
 
+# Backups
+*.backup.json
+stories.backup.json
+
 # Operating System files
 .DS_Store
 Thumbs.db

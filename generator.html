@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>গল্প JSON জেনারেটর - Story Collection</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@400;500;600;700&family=Fira+Code:wght@400;500&family=Noto+Serif+Bengali:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #3b82f6;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --primary-light: #eff6ff;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --crimson: #991b1b;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.06), 0 8px 10px -6px rgba(0,0,0,0.04);
+            --radius: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            font-family: 'Anek Bangla', -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 30px 16px 80px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Top Header */
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 20px 28px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 28px;
+        }
+
+        .header-title h1 {
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-title p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 18px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            font-family: 'Anek Bangla', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: #334155;
+            border-color: var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        /* Main Grid */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .workspace-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card panels */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-md);
+            padding: 24px 28px;
+            position: relative;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: var(--success-light);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .badge-info {
+            background: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+
+        /* Form elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+
+        .form-label .hint {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .input-text, .textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border-radius: 8px;
+            border: 1.5px solid var(--border);
+            font-family: 'Anek Bangla', sans-serif;
+            font-size: 1rem;
+            color: var(--text-main);
+            background: #fff;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .input-text:focus, .textarea:focus {
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .textarea {
+            resize: vertical;
+            min-height: 240px;
+            line-height: 1.7;
+            font-family: 'Noto Serif Bengali', serif;
+            font-size: 1.05rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .input-group .input-text {
+            flex: 1;
+        }
+
+        .helper-btn {
+            background: #f1f5f9;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0 14px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #475569;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.15s ease;
+        }
+
+        .helper-btn:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .stats-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.88rem;
+            color: #475569;
+            margin-top: 8px;
+        }
+
+        .options-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 10px;
+            font-size: 0.88rem;
+            color: #475569;
+        }
+
+        .options-row label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        /* JSON Output Panel */
+        .json-viewer {
+            position: relative;
+        }
+
+        .view-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .tab-btn {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .tab-btn.active {
+            background: #0f172a;
+            color: #fff;
+            border-color: #0f172a;
+        }
+
+        .code-box {
+            background: #0b1120;
+            color: #f1f5f9;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.82rem;
+            line-height: 1.5;
+            max-height: 480px;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            border: 1px solid #1e293b;
+        }
+
+        .action-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .action-row .btn-full {
+            grid-column: span 2;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 22px;
+            background: #0f172a;
+            color: #fff;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 9999;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            background: #065f46;
+            border: 1px solid #059669;
+        }
+
+        .toast.error {
+            background: #991b1b;
+            border: 1px solid #dc2626;
+        }
+
+        /* Reader Preview Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 780px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+
+        .modal-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8fafc;
+        }
+
+        .modal-body {
+            padding: 32px 36px;
+            overflow-y: auto;
+            font-family: 'Noto Serif Bengali', serif;
+            font-size: 1.15rem;
+            line-height: 2.1;
+            color: #1e293b;
+        }
+
+        .modal-body h1 {
+            font-size: 1.85rem;
+            margin-bottom: 24px;
+            color: #0f172a;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 12px;
+            font-family: 'Anek Bangla', sans-serif;
+        }
+
+        .modal-body p {
+            margin-bottom: 1.25em;
+            text-align: justify;
+        }
+
+        /* Existing stories pills */
+        .existing-stories-badge {
+            margin-top: 14px;
+            padding: 10px 14px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Top Bar -->
+        <header class="header-bar">
+            <div class="header-title">
+                <h1>⚡ বাংলা গল্প JSON জেনারেটর</h1>
+                <p>টাইটেল ও প্যারাগ্রাফ দিন — স্বয়ংক্রিয়ভাবে কমা, কোটেশন ও ভ্যালিড JSON তৈরি হয়ে যাবে।</p>
+            </div>
+            <div class="header-actions">
+                <a href="/" class="btn btn-secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+                    গল্প সংকলন হোমপেজ
+                </a>
+            </div>
+        </header>
+
+        <!-- Workspace Grid -->
+        <main class="workspace-grid">
+            
+            <!-- Left Side: Input Form -->
+            <section class="card">
+                <div class="card-header">
+                    <h2>📝 গল্পের তথ্য ইনপুট করুন</h2>
+                    <span class="badge badge-info" id="status-badge">অটো সিন্ট্যাক্স ফিক্সার সক্রিয়</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="story-title">
+                        গল্পের শিরোনাম (Title) *
+                        <span class="hint">যেমন: অন্য আকাঙ্ক্ষা – হিমাদ্রিকিশোর দাশগুপ্ত</span>
+                    </label>
+                    <input type="text" id="story-title" class="input-text" placeholder="গল্পের পুরো নাম ও লেখকের নাম..." autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="story-id">
+                        গল্পের আইডি (Unique ID / URL Slug) *
+                        <span class="hint">ইউআরএলে ব্যবহার হবে</span>
+                    </label>
+                    <div class="input-group">
+                        <input type="text" id="story-id" class="input-text" placeholder="যেমন: onno-akankha বা story-2">
+                        <button type="button" class="helper-btn" onclick="generateSlugFromTitle()" title="টাইটেল থেকে আইডি বানান">🔄 অটো আইডি</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="story-excerpt">
+                        সংক্ষিপ্ত পরিচিতি (Excerpt / সারসংক্ষেপ)
+                        <span class="hint">হোমপেজের কার্ডে দেখানো হবে</span>
+                    </label>
+                    <div class="input-group">
+                        <input type="text" id="story-excerpt" class="input-text" placeholder="গল্পের প্রথম দুই লাইন বা মূল আকর্ষণ...">
+                        <button type="button" class="helper-btn" onclick="autoExtractExcerpt()" title="প্রথম প্যারাগ্রাফ থেকে স্বয়ংক্রিয়ভাবে নিন">✨ অটো এক্সার্প্ট</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="story-paragraphs">
+                        সম্পূর্ণ গল্প / প্যারাগ্রাফ (Paragraphs) *
+                        <span class="hint">এখানে গল্প পেস্ট করুন</span>
+                    </label>
+                    <textarea id="story-paragraphs" class="textarea" placeholder="এখানে সরাসরি গল্পটি পেস্ট করে দিন। 
+
+প্যারাগ্রাফ আলাদা করতে মাঝখানে শুধু একটি খালি লাইন (Enter) রাখুন। কোটেশন মার্ক বা কমা নিয়ে ভাবতে হবে না—সিস্টেম নিজে থেকেই কোটেশন এস্কেপ করবে এবং কমা বসিয়ে ভ্যালিড ফরম্যাটে সাজিয়ে দেবে।"></textarea>
+
+                    <div class="stats-bar">
+                        <span id="para-count">মোট প্যারাগ্রাফ: <b>০</b> টি</span>
+                        <span id="word-count">মোট শব্দ: <b>০</b> টি</span>
+                    </div>
+
+                    <div class="options-row">
+                        <label>
+                            <input type="checkbox" id="opt-smart-quotes" checked>
+                            স্মার্ট কোটেশন ঠিক রাখুন (“ ” ‘ ’)
+                        </label>
+                        <label>
+                            <input type="checkbox" id="opt-trim-blank" checked>
+                            অপ্রয়োজনীয় খালি লাইন বাদ দিন
+                        </label>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button type="button" class="btn btn-secondary" onclick="previewStoryModal()">
+                        👁️ রিডার প্রিভিউ দেখুন
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                        🧹 ফর্ম ক্লিয়ার করুন
+                    </button>
+                </div>
+
+                <div class="existing-stories-badge" id="existing-count-bar">
+                    <span>📚 বর্তমানে সংরক্ষিত গল্প: <b id="existing-count">লোড হচ্ছে...</b> টি</span>
+                    <button type="button" class="helper-btn" onclick="fetchExistingStories()" style="padding: 4px 10px; font-size: 0.8rem;">রিফ্রেশ</button>
+                </div>
+            </section>
+
+            <!-- Right Side: Live JSON Preview & Auto-Save -->
+            <section class="card json-viewer">
+                <div class="card-header">
+                    <h2>⚙️ প্রস্তুতকৃত ভ্যালিড JSON</h2>
+                    <span class="badge badge-success">✓ কোনো সিনট্যাক্স এরর নেই</span>
+                </div>
+
+                <div class="view-tabs">
+                    <button type="button" class="tab-btn active" id="tab-full" onclick="switchView('full')">
+                        সম্পূর্ণ stories.json (অ্যারে ভিউ)
+                    </button>
+                    <button type="button" class="tab-btn" id="tab-single" onclick="switchView('single')">
+                        শুধু এই গল্প (অবজেক্ট ভিউ)
+                    </button>
+                </div>
+
+                <pre class="code-box" id="json-output">// তথ্য ইনপুট করলে স্বয়ংক্রিয়ভাবে এখানে JSON তৈরি হবে...</pre>
+
+                <div class="action-row">
+                    <button type="button" class="btn btn-success btn-full" onclick="saveDirectlyToServer()" id="btn-save-server">
+                        ⚡ লোকাল stories.json ফাইলে সরাসরি সেভ করুন
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="copyJsonToClipboard()">
+                        📋 JSON কপি করুন
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="downloadJsonFile()">
+                        💾 stories.json ডাউনলোড
+                    </button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Reader Preview Modal -->
+    <div class="modal-overlay" id="preview-modal" onclick="closePreviewModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3>📖 রিডার প্রিভিউ</h3>
+                <button type="button" class="btn btn-secondary" onclick="closePreviewModal()" style="padding: 4px 12px;">বন্ধ করুন ✕</button>
+            </div>
+            <div class="modal-body" id="modal-preview-body">
+                <h1 id="preview-title"></h1>
+                <div id="preview-paragraphs"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast-msg"></div>
+
+    <script>
+        let existingStories = [];
+        let currentViewMode = 'full'; // 'full' or 'single'
+
+        // Elements
+        const titleInput = document.getElementById('story-title');
+        const idInput = document.getElementById('story-id');
+        const excerptInput = document.getElementById('story-excerpt');
+        const paragraphsInput = document.getElementById('story-paragraphs');
+        const jsonOutput = document.getElementById('json-output');
+        const paraCountSpan = document.getElementById('para-count');
+        const wordCountSpan = document.getElementById('word-count');
+        const existingCountSpan = document.getElementById('existing-count');
+
+        // Load existing stories from stories.json
+        async function fetchExistingStories() {
+            try {
+                const res = await fetch('stories.json?t=' + Date.now());
+                if (res.ok) {
+                    existingStories = await res.json();
+                    if (!Array.isArray(existingStories)) existingStories = [];
+                } else {
+                    existingStories = [];
+                }
+            } catch (e) {
+                console.warn('Could not load existing stories:', e);
+                existingStories = [];
+            }
+            existingCountSpan.textContent = existingStories.length;
+            updateJson();
+        }
+
+        // Live input listeners
+        [titleInput, idInput, excerptInput, paragraphsInput].forEach(el => {
+            el.addEventListener('input', () => {
+                if (el === titleInput && !idInput.dataset.manualEdited) {
+                    autoGenerateSlug();
+                }
+                updateJson();
+            });
+        });
+
+        document.getElementById('opt-smart-quotes').addEventListener('change', updateJson);
+        document.getElementById('opt-trim-blank').addEventListener('change', updateJson);
+
+        idInput.addEventListener('keydown', () => {
+            idInput.dataset.manualEdited = 'true';
+        });
+
+        // Slug generator (handles English and Bengali phonetic transliteration / clean slug)
+        function autoGenerateSlug() {
+            const title = titleInput.value.trim();
+            if (!title) {
+                idInput.value = '';
+                return;
+            }
+            // Strip author suffix after dash if present
+            let mainTitle = title.split('–')[0].split('-')[0].trim();
+            
+            // Generate clean slug: lowercase latin + digits + bengali characters without punctuation
+            let slug = mainTitle
+                .toLowerCase()
+                .replace(/[।,!?;:'"“”‘’()[\]{}।॥]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .trim();
+
+            idInput.value = slug || 'story-' + Date.now();
+        }
+
+        function generateSlugFromTitle() {
+            idInput.dataset.manualEdited = '';
+            autoGenerateSlug();
+            updateJson();
+            showToast('আইডি টাইটেল থেকে তৈরি করা হয়েছে', 'success');
+        }
+
+        // Auto extract excerpt from first paragraph
+        function autoExtractExcerpt() {
+            const paragraphs = parseParagraphs();
+            if (paragraphs.length === 0) {
+                showToast('আগে গল্পের প্যারাগ্রাফ পেস্ট করুন', 'error');
+                return;
+            }
+            const firstP = paragraphs[0];
+            let excerpt = firstP;
+            if (excerpt.length > 130) {
+                excerpt = excerpt.substring(0, 130).trim() + '...';
+            }
+            excerptInput.value = excerpt;
+            updateJson();
+            showToast('প্রথম প্যারাগ্রাফ থেকে সংক্ষেপ তৈরি করা হয়েছে', 'success');
+        }
+
+        // Parse paragraphs with smart cleanup
+        function parseParagraphs() {
+            const raw = paragraphsInput.value;
+            if (!raw.trim()) return [];
+
+            // Split by 1 or more blank lines (or multiple newlines)
+            const chunks = raw.split(/\r?\n\s*\r?\n/);
+            const trimBlank = document.getElementById('opt-trim-blank').checked;
+
+            const cleanList = [];
+            for (let chunk of chunks) {
+                let p = chunk.trim();
+                // Replace internal strange multiple whitespaces
+                p = p.replace(/[\t\f\v]/g, ' ').replace(/ +/g, ' ');
+
+                if (trimBlank && !p) continue;
+                if (p) cleanList.push(p);
+            }
+
+            return cleanList;
+        }
+
+        // Build the story object
+        function buildCurrentStory() {
+            const title = titleInput.value.trim();
+            const id = idInput.value.trim() || 'story-' + Date.now();
+            let excerpt = excerptInput.value.trim();
+            const paragraphs = parseParagraphs();
+
+            if (!excerpt && paragraphs.length > 0) {
+                excerpt = paragraphs[0].substring(0, 120).trim() + '...';
+            }
+
+            return {
+                id: id,
+                title: title || 'শিরোনামবিহীন গল্প',
+                excerpt: excerpt,
+                paragraphs: paragraphs
+            };
+        }
+
+        // Update JSON & Stats
+        function updateJson() {
+            const paragraphs = parseParagraphs();
+            const totalWords = paragraphs.reduce((sum, p) => sum + (p.trim() ? p.trim().split(/\s+/).length : 0), 0);
+
+            paraCountSpan.innerHTML = `মোট প্যারাগ্রাফ: <b>${paragraphs.length}</b> টি`;
+            wordCountSpan.innerHTML = `মোট শব্দ: <b>${totalWords}</b> টি`;
+
+            const currentStory = buildCurrentStory();
+
+            let outputContent = '';
+            if (currentViewMode === 'single') {
+                outputContent = JSON.stringify(currentStory, null, 2);
+            } else {
+                // Full stories array: merge currentStory with existing stories
+                let combined = [...existingStories];
+                const existingIdx = combined.findIndex(s => s.id === currentStory.id);
+                if (titleInput.value.trim() || paragraphs.length > 0) {
+                    if (existingIdx >= 0) {
+                        combined[existingIdx] = currentStory;
+                    } else {
+                        combined.push(currentStory);
+                    }
+                }
+                outputContent = JSON.stringify(combined, null, 2);
+            }
+
+            jsonOutput.textContent = outputContent;
+        }
+
+        function switchView(mode) {
+            currentViewMode = mode;
+            document.getElementById('tab-full').classList.toggle('active', mode === 'full');
+            document.getElementById('tab-single').classList.toggle('active', mode === 'single');
+            updateJson();
+        }
+
+        // Copy to clipboard
+        async function copyJsonToClipboard() {
+            const text = jsonOutput.textContent;
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('✓ JSON ক্লিপবোর্ডে কপি হয়েছে!', 'success');
+            } catch (e) {
+                // Fallback
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+                showToast('✓ JSON কপি করা হয়েছে!', 'success');
+            }
+        }
+
+        // Download JSON file
+        function downloadJsonFile() {
+            const story = buildCurrentStory();
+            let combined = [...existingStories];
+            const existingIdx = combined.findIndex(s => s.id === story.id);
+            if (existingIdx >= 0) {
+                combined[existingIdx] = story;
+            } else {
+                combined.push(story);
+            }
+            const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(combined, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute('href', dataStr);
+            dlAnchor.setAttribute('download', 'stories.json');
+            dlAnchor.click();
+            showToast('✓ stories.json ফাইলটি ডাউনলোড শুরু হয়েছে', 'success');
+        }
+
+        // Save directly to server (Auto localhost integration)
+        async function saveDirectlyToServer() {
+            const title = titleInput.value.trim();
+            const paragraphs = parseParagraphs();
+
+            if (!title) {
+                showToast('দয়া করে গল্পের শিরোনাম (Title) লিখুন', 'error');
+                titleInput.focus();
+                return;
+            }
+
+            if (paragraphs.length === 0) {
+                showToast('গল্পের প্যারাগ্রাফ ইনপুট করুন', 'error');
+                paragraphsInput.focus();
+                return;
+            }
+
+            const currentStory = buildCurrentStory();
+            const btn = document.getElementById('btn-save-server');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '⏳ সেভ হচ্ছে...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/save-story', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                    body: JSON.stringify(currentStory)
+                });
+
+                const result = await res.json();
+                if (res.ok && result.success) {
+                    showToast('🎉 ' + result.message + ` (মোট গল্প: ${result.totalStories}টি)`, 'success');
+                    await fetchExistingStories();
+                } else {
+                    throw new Error(result.error || 'Server error');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('সার্ভারে সরাসরি সেভ করা যায়নি। আপনি "JSON কপি করুন" বা "ডাউনলোড" বাটন ব্যবহার করতে পারেন।', 'error');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // Reset form
+        function resetForm() {
+            if (confirm('আপনি কি ফর্মটি খালি করে নতুন গল্প লিখতে চান?')) {
+                titleInput.value = '';
+                idInput.value = '';
+                idInput.dataset.manualEdited = '';
+                excerptInput.value = '';
+                paragraphsInput.value = '';
+                updateJson();
+                showToast('ফর্মটি রিসেট করা হয়েছে', 'success');
+            }
+        }
+
+        // Preview modal
+        function previewStoryModal() {
+            const story = buildCurrentStory();
+            document.getElementById('preview-title').textContent = story.title;
+            const container = document.getElementById('preview-paragraphs');
+            container.innerHTML = (story.paragraphs || []).map(p => `<p>${escapeHtml(p)}</p>`).join('');
+            if (story.paragraphs.length === 0) {
+                container.innerHTML = '<p style="color:#94a3b8; font-style: italic;">কোনো প্যারাগ্রাফ পাওয়া যায়নি।</p>';
+            }
+            document.getElementById('preview-modal').classList.add('active');
+        }
+
+        function closePreviewModal() {
+            document.getElementById('preview-modal').classList.remove('active');
+        }
+
+        function showToast(msg, type = 'info') {
+            const toast = document.getElementById('toast-msg');
+            toast.textContent = msg;
+            toast.className = 'toast show ' + type;
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 3500);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // Initialize on load
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        if (!isLocalhost) {
+            const saveBtn = document.getElementById('btn-save-server');
+            if (saveBtn) {
+                saveBtn.innerHTML = '💾 stories.json আপডেট ও ডাউনলোড করুন';
+                saveBtn.title = 'অনলাইনে চালানোর সময় ফাইলটি ডাউনলোড করে গিটহাবে পুশ করুন';
+                saveBtn.onclick = () => {
+                    downloadJsonFile();
+                    showToast('ফাইলটি ডাউনলোড হয়েছে। এটি প্রজেক্টে রিপ্লেস করে গিটহাবে পুশ করলেই Vercel আপডেট হবে।', 'success');
+                };
+            }
+        }
+        fetchExistingStories();
+    </script>
+</body>
+</html>
+
